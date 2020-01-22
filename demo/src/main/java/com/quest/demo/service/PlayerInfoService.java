@@ -1,9 +1,12 @@
 package com.quest.demo.service;
 
+import com.quest.demo.controller.InfoController;
 import com.quest.demo.dto.Player;
 import com.quest.demo.repository.MappingTableRepo;
 import com.quest.demo.repository.MatchRepo;
 import com.quest.demo.repository.PlayerRepo;
+
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,8 @@ import java.util.Optional;
 @Service
 public class PlayerInfoService {
 
+	private static final Logger logger = Logger.getLogger(PlayerInfoService.class); 
+	
     @Autowired
     private MatchRepo matchRepo;
 
@@ -26,10 +31,12 @@ public class PlayerInfoService {
 
     public String getInfoService(int id) {
         //check for id presency
+    	logger.info("Trying to get the player object from database");
         Player playerObj = playerRepo.getPlayerInfo(id);
 
         if (!playerObj.equals(null)) {
            
+        	logger.info("Got the player object doing further operation");
         	JSONObject jsonObject1 = new JSONObject();
             jsonObject1.put("id", playerObj.getId());
             jsonObject1.put("name", playerObj.getName());
@@ -52,7 +59,7 @@ public class PlayerInfoService {
         	 
      else
      {
-    	 System.out.println("not present");
+    	logger.info("No player info found for provided id"+id);
     	return new JSONObject().put("message", "Id is not present").toString();
      }
     }
